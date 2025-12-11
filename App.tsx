@@ -1,0 +1,106 @@
+
+import React, { useState } from 'react';
+import { ProjectState, ProjectConfig, GenerationStatus, GeneratedImage, ImageStatus } from './types';
+import { SidebarSettings } from './components/SidebarSettings';
+import { Gallery } from './components/Gallery';
+import { generateImageForSection, regenerateImage } from './services/geminiService';
+import { DEFAULT_SECTIONS, STYLE_PRESETS, ASPECT_RATIOS, CATEGORY_PRESETS } from './constants';
+
+const App: React.FC = () => {
+  const [state, setState] = useState<ProjectState>({
+    config: {
+      name: 'New Project',
+      category: CATEGORY_PRESETS[0],
+      description: '',
+      style: STYLE_PRESETS[0],
+      aspectRatio: ASPECT_RATIOS[0].value,
+      sections: DEFAULT_SECTIONS.map(s => ({ ...s, id: crypto.randomUUID() }))
+    },
+    images: [],
+    status: GenerationStatus.IDLE,
+    progress: 0
+  });
+
+  const updateConfig = (newConfig: ProjectConfig) => {
+    setState(prev => ({ ...prev, config: newConfig }));
+  };
+
+  const handleGenerate = async () => {
+    if (!state.config.name) return;
+
+    // 1. Create Placeholders
+    const newImages: GeneratedImage[] = [];
+    const operations: Promise<void>[] = [];
+    
+    // We only want to generate for sections that don't have images OR if user explicitly asks (but here we append/replace logic).
+    // For this simple version, we will clear old images if it's a full generate click, or we could be smarter.
+    // Let's clear old images for a fresh start based on the sidebar "Generate" button.
+    
+    state.config.sections.forEach(section => {
+      for (let i = 0; i < section.imageCount; i++) {
+        const placeholderId = crypto.randomUUID();
+        const placeholder: GeneratedImage = {
+          id: placeholderId,
+          sectionId: section.id,
+          prompt: '',
+          createdAt: Date.now(),
+          status: ImageStatus.PENDING
+        };
+        newImages.push(placeholder);
+
+        // 2. Queue Operations
+        const op = generateImageForSection(state.config, section, placeholderId)
+          .then(completedImage => {
+             setState(prev => ({
+               ...prev,
+               images: prev.images.map(img => img.id === placeholderId ? completedImage : img)
+             }));
+          });
+        operations.push(op);
+      }
+    });
+
+    setState(prev => ({
+      ...prev,
+      images: newImages, // Replace with new batch of placeholders
+      status: GenerationStatus.GENERATING
+    }));
+
+    // 3. Execute all (Parallel with limits handled by browser/service, 
+    // ideally we'd use a queue limit here but Gemini API is fast enough for ~10-20 images)
+    try {
+      await Promise.allSettled(operations);
+      setState(prev => ({ ...prev, status: GenerationStatus.COMPLETED }));
+    } catch (e) {
+      console.error(e);
+      setState(prev => ({ ...prev, status: GenerationStatus.FAILED }));
+    }
+  };
+
+  const handleRegenerate = async (image: GeneratedImage) => {
+     // Optimistic update handled by component showing loader, but we wait for result
+     const newImage = await regenerateImage(state.config, image);
+     setState(prev => ({
+       ...prev,
+       images: prev.images.map(img => img.id === image.id ? newImage : img)
+     }));
+  };
+
+  return (
+    <div className="flex h-screen w-full bg-zinc-950 text-white overflow-hidden font-sans">
+      <SidebarSettings 
+        config={state.config}
+        onChange={updateConfig}
+        onGenerate={handleGenerate}
+        isGenerating={state.status === GenerationStatus.GENERATING}
+      />
+      <Gallery 
+        config={state.config}
+        images={state.images}
+        onRegenerate={handleRegenerate}
+      />
+    </div>
+  );
+};
+
+export default App;
