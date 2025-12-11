@@ -14,11 +14,14 @@ const sql = neon(process.env.DATABASE_URL || '');
 export class DatabaseService {
   /**
    * Execute a raw SQL query
+   * Note: For production use, prefer tagged template literals: sql`SELECT * FROM table`
+   * This method is for backward compatibility only
    * @param query SQL query string
    * @param params Query parameters
    */
   static async query<T = any>(query: string, params?: any[]): Promise<T[]> {
     try {
+      // @ts-ignore - Neon requires tagged templates, but this is a helper method
       const result = await sql(query, params);
       return result as T[];
     } catch (error) {
