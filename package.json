@@ -8,7 +8,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "db:test": "tsx db/test-connection.ts",
-    "db:migrate": "tsx db/migrate.ts"
+    "db:migrate": "tsx db/migrate.ts",
+    "db:crud": "tsx db/test-crud.ts"
   },
   "dependencies": {
     "@google/genai": "^1.33.0",
