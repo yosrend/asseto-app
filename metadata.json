@@ -1,5 +1,7 @@
 {
-  "name": "Asseto - Design Image Generator",
-  "description": "A professional AI-powered asset generator for UI/UX designers using Gemini Nano.",
-  "requestFramePermissions": []
+  "name": "Asseto - AI Design Asset Generator",
+  "description": "Professional AI-powered asset generator for UI/UX designers using Google Gemini API.",
+  "version": "1.0.0",
+  "author": "Asseto Team",
+  "repository": "https://github.com/yosrend/asseto-app"
 }
