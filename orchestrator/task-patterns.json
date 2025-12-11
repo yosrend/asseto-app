@@ -1,0 +1,168 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "Task Patterns Configuration for Asseto",
+  "description": "Pre-defined orchestration patterns for AI image generation tasks",
+  "version": "1.0.0",
+  "patterns": [
+    {
+      "id": "ai-feature-enhancement",
+      "name": "AI Feature Enhancement",
+      "description": "Enhance Gemini AI image generation capabilities",
+      "triggers": [
+        "improve generation",
+        "enhance ai",
+        "add ai feature",
+        "optimize prompts"
+      ],
+      "complexity": "medium-high",
+      "phases": [
+        {
+          "id": "phase-1-analysis",
+          "name": "AI Analysis",
+          "parallel": false,
+          "droids": ["ai-integration-specialist"],
+          "description": "Analyze current AI integration and identify improvements",
+          "outputs": [
+            "AI capability assessment",
+            "Enhancement opportunities",
+            "Integration recommendations"
+          ]
+        },
+        {
+          "id": "phase-2-implementation",
+          "name": "Implementation",
+          "parallel": true,
+          "droids": ["ai-integration-specialist", "frontend-developer"],
+          "description": "Implement AI enhancements and UI improvements",
+          "dependencies": ["phase-1-analysis"],
+          "outputs": [
+            "Enhanced AI service",
+            "Updated UI components",
+            "Improved prompt engineering"
+          ]
+        },
+        {
+          "id": "phase-3-testing",
+          "name": "Testing & Validation",
+          "parallel": false,
+          "droids": ["test-automator"],
+          "description": "Validate AI improvements and test edge cases",
+          "dependencies": ["phase-2-implementation"],
+          "outputs": [
+            "AI test suite",
+            "Quality metrics",
+            "Performance benchmarks"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ui-enhancement",
+      "name": "UI/UX Enhancement",
+      "description": "Improve user interface and experience",
+      "triggers": [
+        "improve ui",
+        "enhance design",
+        "update interface",
+        "redesign component"
+      ],
+      "complexity": "medium",
+      "phases": [
+        {
+          "id": "phase-1-design",
+          "name": "Design Analysis",
+          "parallel": false,
+          "droids": ["frontend-developer"],
+          "description": "Analyze current UI and design improvements",
+          "outputs": [
+            "UI analysis report",
+            "Design mockups",
+            "Component architecture"
+          ]
+        },
+        {
+          "id": "phase-2-implementation",
+          "name": "Implementation",
+          "parallel": false,
+          "droids": ["frontend-developer"],
+          "description": "Implement UI enhancements",
+          "dependencies": ["phase-1-design"],
+          "outputs": [
+            "Updated components",
+            "Styling improvements",
+            "Responsive design"
+          ]
+        },
+        {
+          "id": "phase-3-testing",
+          "name": "Testing",
+          "parallel": false,
+          "droids": ["test-automator"],
+          "description": "Test UI changes and accessibility",
+          "dependencies": ["phase-2-implementation"],
+          "outputs": [
+            "UI tests",
+            "Accessibility audit",
+            "Cross-browser testing"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bug-fix",
+      "name": "Bug Fix Workflow",
+      "description": "Systematic bug diagnosis and resolution",
+      "triggers": [
+        "fix bug",
+        "error",
+        "not working",
+        "broken",
+        "issue"
+      ],
+      "complexity": "simple-medium",
+      "phases": [
+        {
+          "id": "phase-1-diagnosis",
+          "name": "Diagnosis",
+          "parallel": false,
+          "droids": ["debugger"],
+          "description": "Identify root cause and reproduction steps",
+          "outputs": [
+            "Root cause analysis",
+            "Reproduction steps",
+            "Impact assessment"
+          ]
+        },
+        {
+          "id": "phase-2-fix",
+          "name": "Implementation",
+          "parallel": false,
+          "droids": ["auto-select-by-domain"],
+          "description": "Implement fix based on diagnosis",
+          "dependencies": ["phase-1-diagnosis"],
+          "outputs": [
+            "Code fix",
+            "Verification steps"
+          ]
+        },
+        {
+          "id": "phase-3-testing",
+          "name": "Verification",
+          "parallel": false,
+          "droids": ["test-automator"],
+          "description": "Create tests to prevent regression",
+          "dependencies": ["phase-2-fix"],
+          "outputs": [
+            "Regression tests",
+            "Test coverage report"
+          ]
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "created": "2024-12-11",
+    "project": "Asseto AI Image Generator",
+    "usage": "This configuration defines common task patterns for the Asseto orchestrator to recognize and handle automatically."
+  }
+}
