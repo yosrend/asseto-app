@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ProjectState, ProjectConfig, GenerationStatus, GeneratedImage, ImageStatus } from './types';
 import { SidebarSettings } from './components/SidebarSettings';
 import { Gallery } from './components/Gallery';
@@ -7,6 +6,7 @@ import { generateImageForSection, regenerateImage } from './services/geminiServi
 import { DEFAULT_SECTIONS, STYLE_PRESETS, ASPECT_RATIOS, CATEGORY_PRESETS } from './constants';
 
 const App: React.FC = () => {
+  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
   const [state, setState] = useState<ProjectState>({
     config: {
       name: 'New Project',
@@ -21,6 +21,18 @@ const App: React.FC = () => {
     progress: 0
   });
 
+  useEffect(() => {
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
+  };
+
   const updateConfig = (newConfig: ProjectConfig) => {
     setState(prev => ({ ...prev, config: newConfig }));
   };
@@ -32,10 +44,7 @@ const App: React.FC = () => {
     const newImages: GeneratedImage[] = [];
     const operations: Promise<void>[] = [];
     
-    // We only want to generate for sections that don't have images OR if user explicitly asks (but here we append/replace logic).
-    // For this simple version, we will clear old images if it's a full generate click, or we could be smarter.
-    // Let's clear old images for a fresh start based on the sidebar "Generate" button.
-    
+    // Clear old images for a fresh start based on the sidebar "Generate" button.
     state.config.sections.forEach(section => {
       for (let i = 0; i < section.imageCount; i++) {
         const placeholderId = crypto.randomUUID();
@@ -66,8 +75,6 @@ const App: React.FC = () => {
       status: GenerationStatus.GENERATING
     }));
 
-    // 3. Execute all (Parallel with limits handled by browser/service, 
-    // ideally we'd use a queue limit here but Gemini API is fast enough for ~10-20 images)
     try {
       await Promise.allSettled(operations);
       setState(prev => ({ ...prev, status: GenerationStatus.COMPLETED }));
@@ -78,7 +85,6 @@ const App: React.FC = () => {
   };
 
   const handleRegenerate = async (image: GeneratedImage) => {
-     // Optimistic update handled by component showing loader, but we wait for result
      const newImage = await regenerateImage(state.config, image);
      setState(prev => ({
        ...prev,
@@ -87,7 +93,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="flex h-screen w-full bg-zinc-950 text-white overflow-hidden font-sans">
+    <div className="flex h-screen w-full overflow-hidden font-sans bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-white transition-colors duration-300">
       <SidebarSettings 
         config={state.config}
         onChange={updateConfig}
@@ -98,6 +104,8 @@ const App: React.FC = () => {
         config={state.config}
         images={state.images}
         onRegenerate={handleRegenerate}
+        theme={theme}
+        onToggleTheme={toggleTheme}
       />
     </div>
   );

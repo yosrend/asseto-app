@@ -77,40 +77,46 @@ const ReferenceImageModal: React.FC<ReferenceModalProps> = ({ isOpen, onClose, o
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm animate-in fade-in">
-      <div className="bg-zinc-900 border border-zinc-700 rounded-xl w-full max-w-lg p-6 shadow-2xl relative">
-        <button onClick={onClose} className="absolute top-4 right-4 text-zinc-500 hover:text-white">
+    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 backdrop-blur-md animate-in fade-in duration-300">
+      <div className="bg-[#121215] dark:bg-[#121215] bg-white border border-white/10 dark:border-white/10 rounded-2xl w-full max-w-lg p-8 shadow-2xl relative">
+        <button onClick={onClose} className="absolute top-4 right-4 text-zinc-500 hover:text-white transition-colors">
           <X size={20} />
         </button>
         
-        <h2 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
-          <ImagePlus size={24} className="text-purple-400"/> Reference Style
+        <h2 className="text-2xl font-display font-bold text-white mb-2 flex items-center gap-2">
+          <ImagePlus size={24} className="text-indigo-500"/> Reference Style
         </h2>
-        <p className="text-sm text-zinc-400 mb-6">
-          Upload or paste up to 3 images. AI will analyze them to extract a unified visual style for your project.
+        <p className="text-sm text-zinc-400 mb-8 font-light">
+          Upload up to 3 images. Our AI will analyze their lighting, palette, and vibe.
         </p>
 
         {/* Drop/Preview Area */}
         <div 
-          className={`border-2 border-dashed rounded-xl p-8 mb-6 flex flex-col items-center justify-center transition-colors ${
-            images.length < 3 ? 'border-zinc-700 hover:border-purple-500/50 hover:bg-zinc-800/50 cursor-pointer' : 'border-zinc-800 bg-zinc-900 cursor-default'
+          className={`border-2 border-dashed rounded-xl p-8 mb-6 flex flex-col items-center justify-center transition-all duration-300 ${
+            images.length < 3 
+              ? 'border-zinc-700 hover:border-indigo-500/50 hover:bg-white/5 cursor-pointer' 
+              : 'border-zinc-800 bg-black/20 cursor-default'
           }`}
           onClick={() => images.length < 3 && fileInputRef.current?.click()}
         >
           {images.length === 0 ? (
-            <div className="text-center space-y-2">
-              <Upload className="mx-auto text-zinc-500" size={32} />
-              <p className="text-sm text-zinc-300">Click to upload or <span className="text-purple-400">Ctrl+V</span> to paste</p>
-              <p className="text-xs text-zinc-600">Supports PNG, JPG, WEBP</p>
+            <div className="text-center space-y-3">
+              <div className="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center mx-auto text-zinc-400">
+                 <Upload size={20} />
+              </div>
+              <div className="space-y-1">
+                <p className="text-sm text-zinc-300 font-medium">Click to upload or <span className="text-indigo-400">Ctrl+V</span></p>
+                <p className="text-xs text-zinc-500">PNG, JPG, WEBP</p>
+              </div>
             </div>
           ) : (
              <div className="grid grid-cols-3 gap-4 w-full" onClick={(e) => e.stopPropagation()}>
                {images.map((img, idx) => (
-                 <div key={idx} className="relative group aspect-square rounded-lg overflow-hidden border border-zinc-700 bg-zinc-800">
+                 <div key={idx} className="relative group aspect-square rounded-lg overflow-hidden border border-white/10 shadow-lg">
                     <img src={img} alt="Reference" className="w-full h-full object-cover" />
                     <button 
                       onClick={() => removeImage(idx)}
-                      className="absolute top-1 right-1 bg-black/50 hover:bg-red-500/80 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                      className="absolute top-1 right-1 bg-black/60 hover:bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-200"
                     >
                       <X size={12} />
                     </button>
@@ -119,7 +125,7 @@ const ReferenceImageModal: React.FC<ReferenceModalProps> = ({ isOpen, onClose, o
                {images.length < 3 && (
                  <div 
                     onClick={() => fileInputRef.current?.click()}
-                    className="aspect-square rounded-lg border border-dashed border-zinc-700 flex items-center justify-center text-zinc-500 hover:text-purple-400 hover:border-purple-500 hover:bg-zinc-800 cursor-pointer transition-all"
+                    className="aspect-square rounded-lg border border-dashed border-zinc-700 flex items-center justify-center text-zinc-500 hover:text-indigo-400 hover:border-indigo-500/50 hover:bg-white/5 cursor-pointer transition-all"
                  >
                     <Plus size={24} />
                  </div>
@@ -137,21 +143,21 @@ const ReferenceImageModal: React.FC<ReferenceModalProps> = ({ isOpen, onClose, o
         </div>
 
         <div className="flex justify-between items-center">
-           <span className="text-xs text-zinc-500">{images.length}/3 images selected</span>
+           <span className="text-xs text-zinc-500 font-medium tracking-wide uppercase">{images.length}/3 IMAGES</span>
            <div className="flex gap-3">
              <button 
                onClick={onClose}
-               className="px-4 py-2 rounded-lg text-sm text-zinc-400 hover:text-white hover:bg-zinc-800"
+               className="px-5 py-2.5 rounded-xl text-sm font-medium text-zinc-400 hover:text-white hover:bg-white/5 transition-colors"
              >
                Cancel
              </button>
              <button 
                onClick={() => onAnalyze(images)}
                disabled={images.length === 0 || isAnalyzing}
-               className="bg-purple-600 hover:bg-purple-500 disabled:opacity-50 disabled:cursor-not-allowed text-white px-6 py-2 rounded-lg font-medium text-sm flex items-center gap-2 transition-all shadow-lg shadow-purple-900/20"
+               className="bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed text-white px-6 py-2.5 rounded-xl font-medium text-sm flex items-center gap-2 transition-all shadow-lg shadow-indigo-900/30 hover:shadow-indigo-900/50"
              >
                {isAnalyzing ? <Loader2 size={16} className="animate-spin" /> : <Sparkles size={16} />}
-               Analyze & Apply Style
+               Extract Style
              </button>
            </div>
         </div>
@@ -222,8 +228,14 @@ export const SidebarSettings: React.FC<SidebarSettingsProps> = ({ config, onChan
     setLoadingAction('analyze-style');
     try {
       const stylePrompt = await extractStyleFromImages(images);
-      updateConfig('style', 'Image Reference');
-      updateConfig('stylePrompt', stylePrompt);
+      
+      const newConfig = {
+        ...config,
+        style: 'Image Reference',
+        stylePrompt: stylePrompt
+      };
+      onChange(newConfig);
+
       setIsRefModalOpen(false);
     } catch (err) {
       console.error(err);
@@ -234,43 +246,50 @@ export const SidebarSettings: React.FC<SidebarSettingsProps> = ({ config, onChan
 
   return (
     <>
-      <aside className="w-96 bg-zinc-900 border-r border-zinc-800 h-screen overflow-y-auto flex flex-col shadow-xl z-20">
-        <div className="p-5 border-b border-zinc-800 bg-zinc-900 sticky top-0 z-10">
-          <div className="flex items-center gap-2 mb-1">
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center shadow-lg shadow-blue-900/50">
-              <Sparkles size={18} className="text-white" />
+      <aside className="w-[420px] bg-white dark:bg-[#0c0c0e] border-r border-zinc-200 dark:border-white/5 h-screen overflow-y-auto flex flex-col shadow-2xl z-20 transition-colors duration-300">
+        
+        {/* Header */}
+        <div className="p-6 border-b border-zinc-200 dark:border-white/5 bg-white/50 dark:bg-[#0c0c0e]/80 backdrop-blur-md sticky top-0 z-10">
+          <div className="flex items-center gap-3 mb-1">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+              <Sparkles size={16} className="text-white fill-white/20" />
             </div>
-            <h1 className="text-xl font-bold tracking-tight text-white">Asseto</h1>
+            <h1 className="text-2xl font-display font-bold tracking-tight text-zinc-900 dark:text-white">Asseto.</h1>
           </div>
-          <p className="text-xs text-zinc-500 ml-10">AI Design Asset Generator</p>
+          <p className="text-xs text-zinc-500 dark:text-zinc-400 font-medium tracking-wide ml-11">AI DESIGN ASSET GENERATOR</p>
         </div>
 
-        <div className="p-5 space-y-8 flex-1">
+        <div className="p-6 space-y-10 flex-1">
           
-          {/* Project Info */}
-          <section className="space-y-4">
-            <h2 className="text-xs font-bold text-zinc-500 uppercase tracking-wider flex items-center gap-2">
-              <Type size={14} /> Project Context
+          {/* Project Context */}
+          <section className="space-y-5">
+            <h2 className="text-[11px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest flex items-center gap-2">
+              <Type size={12} /> Context
             </h2>
             
-            <div className="space-y-3">
-              <input 
-                type="text"
-                value={config.name}
-                onChange={(e) => updateConfig('name', e.target.value)}
-                placeholder="Project Name"
-                className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-white focus:ring-1 focus:ring-blue-500 focus:outline-none"
-              />
+            <div className="space-y-4">
+              <div className="group">
+                <input 
+                  type="text"
+                  value={config.name}
+                  onChange={(e) => updateConfig('name', e.target.value)}
+                  placeholder="Project Name"
+                  className="w-full bg-transparent border-b border-zinc-300 dark:border-white/10 px-1 py-2 text-lg font-medium text-zinc-900 dark:text-white focus:border-indigo-500 focus:outline-none placeholder-zinc-400 dark:placeholder-zinc-600 transition-colors"
+                />
+              </div>
 
-              <div className="relative">
+              <div className="relative group">
                 <select 
                   value={config.category === 'Custom' ? 'Custom' : config.category}
                   onChange={(e) => updateConfig('category', e.target.value)}
-                  className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-white focus:ring-1 focus:ring-blue-500 focus:outline-none appearance-none"
+                  className="w-full bg-zinc-100 dark:bg-white/5 border border-transparent dark:border-white/5 rounded-xl px-4 py-3 text-sm text-zinc-900 dark:text-white focus:ring-1 focus:ring-indigo-500 focus:outline-none appearance-none transition-colors cursor-pointer hover:bg-zinc-200 dark:hover:bg-white/10"
                 >
                   {CATEGORY_PRESETS.map(c => <option key={c} value={c}>{c}</option>)}
                   <option value="Custom">Custom Category...</option>
                 </select>
+                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-500">
+                  <LayoutTemplate size={14} />
+                </div>
               </div>
               
               {(config.category === 'Custom' || config.customCategory) && (
@@ -281,22 +300,22 @@ export const SidebarSettings: React.FC<SidebarSettingsProps> = ({ config, onChan
                       updateConfig('category', 'Custom');
                       updateConfig('customCategory', e.target.value);
                   }}
-                  placeholder="Type your category..."
-                  className="w-full bg-zinc-900 border border-blue-900/50 rounded-lg px-3 py-2 text-sm text-blue-100 placeholder-blue-500/50 focus:outline-none focus:border-blue-500"
+                  placeholder="Enter custom category..."
+                  className="w-full bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-200 dark:border-indigo-500/20 rounded-xl px-4 py-3 text-sm text-indigo-900 dark:text-indigo-200 placeholder-indigo-400/50 focus:outline-none focus:border-indigo-500 transition-all animate-in fade-in slide-in-from-top-2"
                 />
               )}
 
-              <div className="relative">
+              <div className="relative group">
                 <textarea 
                   value={config.description}
                   onChange={(e) => updateConfig('description', e.target.value)}
-                  placeholder="Project brief..."
-                  className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-white focus:ring-1 focus:ring-blue-500 focus:outline-none min-h-[100px] resize-none pr-8"
+                  placeholder="Describe your visual direction..."
+                  className="w-full bg-zinc-100 dark:bg-white/5 border border-transparent dark:border-white/5 rounded-xl px-4 py-3 text-sm text-zinc-900 dark:text-zinc-300 focus:ring-1 focus:ring-indigo-500 focus:outline-none min-h-[120px] resize-none pr-10 transition-colors hover:bg-zinc-200 dark:hover:bg-white/10"
                 />
                 <button 
                   onClick={handleRefineDescription}
                   disabled={loadingAction === 'refine' || !config.description}
-                  className="absolute top-2 right-2 p-1.5 bg-blue-600/20 hover:bg-blue-600/40 rounded-md text-blue-400 transition-colors"
+                  className="absolute top-3 right-3 p-1.5 bg-white/50 dark:bg-white/10 hover:bg-indigo-100 dark:hover:bg-indigo-500/30 rounded-lg text-zinc-600 dark:text-zinc-400 hover:text-indigo-600 dark:hover:text-indigo-300 transition-colors backdrop-blur-sm"
                   title="Refine with AI"
                 >
                   {loadingAction === 'refine' ? <Loader2 size={14} className="animate-spin"/> : <Sparkles size={14}/>}
@@ -305,23 +324,23 @@ export const SidebarSettings: React.FC<SidebarSettingsProps> = ({ config, onChan
             </div>
           </section>
 
-          <hr className="border-zinc-800" />
+          <hr className="border-zinc-200 dark:border-white/5" />
 
           {/* Style */}
-          <section className="space-y-4">
-            <h2 className="text-xs font-bold text-zinc-500 uppercase tracking-wider flex items-center gap-2">
-              <Wand2 size={14} /> Aesthetics
+          <section className="space-y-5">
+            <h2 className="text-[11px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest flex items-center gap-2">
+              <Wand2 size={12} /> Aesthetic
             </h2>
 
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 gap-2.5">
               {STYLE_PRESETS.map(style => (
                 <button
                   key={style}
                   onClick={() => updateConfig('style', style)}
-                  className={`text-xs px-2 py-2 rounded-md border text-left truncate transition-colors ${
+                  className={`text-xs px-3 py-2.5 rounded-lg border text-left truncate transition-all duration-200 ${
                     config.style === style 
-                    ? 'bg-blue-600/20 border-blue-500 text-blue-200' 
-                    : 'border-zinc-700 bg-zinc-800/50 text-zinc-400 hover:bg-zinc-800'
+                    ? 'bg-indigo-50 dark:bg-indigo-600 border-indigo-200 dark:border-indigo-500 text-indigo-900 dark:text-white font-medium shadow-sm' 
+                    : 'border-zinc-200 dark:border-white/5 bg-zinc-50 dark:bg-white/5 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-white/10 hover:border-zinc-300 dark:hover:border-white/10'
                   }`}
                 >
                   {style}
@@ -329,99 +348,136 @@ export const SidebarSettings: React.FC<SidebarSettingsProps> = ({ config, onChan
               ))}
               <button
                 onClick={() => setIsRefModalOpen(true)}
-                className={`col-span-2 text-xs px-2 py-2 rounded-md border text-left flex items-center justify-center gap-2 transition-colors ${
+                className={`col-span-2 text-xs px-3 py-3 rounded-lg border border-dashed flex items-center justify-center gap-2 transition-all duration-200 ${
                     config.style === 'Image Reference'
-                    ? 'bg-purple-600/20 border-purple-500 text-purple-200' 
-                    : 'border-dashed border-zinc-600 bg-zinc-900 text-zinc-400 hover:border-zinc-500 hover:bg-zinc-800'
+                    ? 'bg-purple-50 dark:bg-purple-500/20 border-purple-500 text-purple-700 dark:text-purple-200 font-medium' 
+                    : 'border-zinc-300 dark:border-zinc-700 bg-transparent text-zinc-500 dark:text-zinc-500 hover:text-indigo-500 dark:hover:text-indigo-400 hover:border-indigo-400 dark:hover:border-indigo-500/50 hover:bg-indigo-50 dark:hover:bg-indigo-500/10'
                 }`}
               >
                 {loadingAction === 'analyze-style' ? <Loader2 size={14} className="animate-spin"/> : <Upload size={14} />}
-                Upload Reference Image (Max 3)
+                {config.style === 'Image Reference' ? 'Update Reference Images' : 'Upload Reference Image'}
               </button>
             </div>
 
             {config.style === 'Image Reference' && (
-              <div className="space-y-2 animate-in fade-in slide-in-from-top-2">
-                <label className="text-xs text-zinc-500">Extracted Style Prompt</label>
-                <textarea 
-                  value={config.stylePrompt || ''}
-                  onChange={(e) => updateConfig('stylePrompt', e.target.value)}
-                  className="w-full bg-zinc-900 border border-purple-500/30 rounded-lg px-3 py-2 text-xs text-purple-100 focus:outline-none min-h-[80px]"
-                  placeholder="AI will describe the uploaded image style here..."
-                />
+              <div className="animate-in fade-in slide-in-from-top-2">
+                <div className="bg-purple-50 dark:bg-purple-500/10 border border-purple-100 dark:border-purple-500/20 rounded-xl p-3">
+                  <div className="flex items-center gap-2 mb-2 text-purple-700 dark:text-purple-300 text-xs font-semibold uppercase tracking-wide">
+                     <Sparkles size={10} /> AI Style Analysis
+                  </div>
+                  <textarea 
+                    value={config.stylePrompt || ''}
+                    onChange={(e) => updateConfig('stylePrompt', e.target.value)}
+                    className="w-full bg-transparent border-none p-0 text-xs text-purple-900 dark:text-purple-100 focus:outline-none min-h-[60px] resize-none leading-relaxed placeholder-purple-300"
+                    placeholder="AI analysis..."
+                  />
+                </div>
               </div>
             )}
 
             <div className="pt-2">
-              <label className="text-xs text-zinc-500 mb-2 block">Aspect Ratio</label>
+              <label className="text-xs text-zinc-500 dark:text-zinc-500 font-medium mb-3 block uppercase tracking-wider">Aspect Ratio</label>
               <div className="flex flex-wrap gap-2">
                 {ASPECT_RATIOS.map(ratio => (
                   <button
                       key={ratio.value}
                       onClick={() => updateConfig('aspectRatio', ratio.value)}
-                      className={`p-2 rounded border flex items-center gap-1 transition-colors ${
+                      className={`px-3 py-2 rounded-lg border flex items-center gap-1.5 transition-all ${
                         config.aspectRatio === ratio.value
-                        ? 'bg-zinc-100 text-black border-white'
-                        : 'bg-zinc-800 border-zinc-700 text-zinc-400 hover:border-zinc-500'
+                        ? 'bg-zinc-900 dark:bg-white text-white dark:text-black border-zinc-900 dark:border-white shadow-sm font-medium'
+                        : 'bg-zinc-100 dark:bg-white/5 border-zinc-200 dark:border-white/5 text-zinc-600 dark:text-zinc-400 hover:border-zinc-300 dark:hover:border-white/20 hover:bg-zinc-200 dark:hover:bg-white/10'
                       }`}
                       title={ratio.label}
                   >
-                    <Ratio size={14} />
-                    <span className="text-xs font-medium">{ratio.value}</span>
+                    <Ratio size={12} />
+                    <span className="text-xs">{ratio.value === 'Custom' ? 'Custom' : ratio.value}</span>
                   </button>
                 ))}
               </div>
+
+              {/* Custom Dimensions Inputs */}
+              {config.aspectRatio === 'Custom' && (
+                <div className="flex gap-2 mt-3 animate-in fade-in slide-in-from-top-1 bg-zinc-100 dark:bg-white/5 p-2 rounded-lg border border-zinc-200 dark:border-white/5">
+                   <div className="flex-1">
+                      <label className="text-[9px] text-zinc-500 uppercase font-bold pl-1 mb-1 block">Width</label>
+                      <input 
+                         type="number"
+                         value={config.width || 1024}
+                         onChange={(e) => updateConfig('width', parseInt(e.target.value))}
+                         className="w-full bg-white dark:bg-black/30 border border-zinc-200 dark:border-white/10 rounded px-2 py-1.5 text-xs text-zinc-900 dark:text-white font-mono"
+                         placeholder="1024"
+                      />
+                   </div>
+                   <div className="flex items-end pb-2 text-zinc-400">x</div>
+                   <div className="flex-1">
+                      <label className="text-[9px] text-zinc-500 uppercase font-bold pl-1 mb-1 block">Height</label>
+                      <input 
+                         type="number"
+                         value={config.height || 1024}
+                         onChange={(e) => updateConfig('height', parseInt(e.target.value))}
+                         className="w-full bg-white dark:bg-black/30 border border-zinc-200 dark:border-white/10 rounded px-2 py-1.5 text-xs text-zinc-900 dark:text-white font-mono"
+                         placeholder="1024"
+                      />
+                   </div>
+                </div>
+              )}
             </div>
           </section>
 
-          <hr className="border-zinc-800" />
+          <hr className="border-zinc-200 dark:border-white/5" />
 
           {/* Sections */}
-          <section className="space-y-4">
+          <section className="space-y-5">
             <div className="flex justify-between items-center">
-              <h2 className="text-xs font-bold text-zinc-500 uppercase tracking-wider flex items-center gap-2">
-                  <LayoutTemplate size={14} /> Sections
+              <h2 className="text-[11px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest flex items-center gap-2">
+                  <LayoutTemplate size={12} /> Sections
               </h2>
-              <button onClick={addSection} className="p-1 hover:bg-zinc-800 rounded text-zinc-400 hover:text-white">
+              <button onClick={addSection} className="p-1.5 hover:bg-zinc-100 dark:hover:bg-white/10 rounded-lg text-zinc-400 dark:text-zinc-500 hover:text-zinc-900 dark:hover:text-white transition-colors">
                   <Plus size={16} />
               </button>
             </div>
             
-            <div className="space-y-3">
+            <div className="space-y-4">
               {config.sections.map((section, idx) => (
-                <div key={section.id} className="bg-zinc-800/30 border border-zinc-800 rounded-lg p-3 group hover:border-zinc-700 transition-colors">
-                  <div className="flex justify-between items-start mb-2">
+                <div key={section.id} className="bg-zinc-50 dark:bg-white/5 border border-zinc-200 dark:border-white/5 rounded-xl p-4 group hover:border-zinc-300 dark:hover:border-white/10 transition-colors duration-300">
+                  <div className="flex justify-between items-start mb-3">
                       <input 
-                        className="bg-transparent border-none p-0 text-sm font-medium text-white focus:ring-0 placeholder-zinc-600 w-32" 
+                        className="bg-transparent border-none p-0 text-sm font-semibold text-zinc-900 dark:text-zinc-100 focus:ring-0 placeholder-zinc-400 dark:placeholder-zinc-600 w-40" 
                         placeholder="Section Name"
                         value={section.name}
                         onChange={(e) => updateSection(section.id, 'name', e.target.value)}
                       />
-                      <div className="flex items-center gap-2">
-                        <input 
-                          type="number" 
-                          min={1} max={10}
-                          value={section.imageCount}
-                          onChange={(e) => updateSection(section.id, 'imageCount', parseInt(e.target.value))}
-                          className="w-8 bg-zinc-900 border border-zinc-700 rounded text-center text-xs py-1"
-                          title="Image Count"
-                        />
-                        <button onClick={() => removeSection(section.id)} className="text-zinc-600 hover:text-red-400">
+                      <button onClick={() => removeSection(section.id)} className="text-zinc-400 hover:text-red-500 dark:text-zinc-600 dark:hover:text-red-400 transition-colors">
                             <Trash2 size={14} />
-                        </button>
-                      </div>
+                      </button>
                   </div>
+
+                  <div className="mb-4">
+                    <div className="flex justify-between items-center mb-2">
+                       <label className="text-[10px] text-zinc-500 uppercase font-semibold">Quantity: {section.imageCount}</label>
+                    </div>
+                    <input 
+                       type="range"
+                       min="1"
+                       max="10"
+                       step="1"
+                       value={section.imageCount}
+                       onChange={(e) => updateSection(section.id, 'imageCount', parseInt(e.target.value))}
+                       className="w-full h-1 bg-zinc-200 dark:bg-zinc-700 rounded-lg appearance-none cursor-pointer accent-indigo-500"
+                    />
+                  </div>
+
                   <div className="relative">
                     <textarea 
                       value={section.description || ''}
                       onChange={(e) => updateSection(section.id, 'description', e.target.value)}
-                      placeholder="Specific details..."
-                      className="w-full bg-zinc-900/50 border border-zinc-700/50 rounded px-2 py-1.5 text-xs text-zinc-400 focus:outline-none resize-none h-16 pr-6"
+                      placeholder="Details e.g. 'Hero image with abstract 3D shape'"
+                      className="w-full bg-white dark:bg-black/20 border border-zinc-200 dark:border-white/5 rounded-lg px-3 py-2 text-xs text-zinc-600 dark:text-zinc-300 focus:outline-none focus:border-indigo-500/50 resize-none h-16 pr-8 transition-colors"
                     />
                     <button 
                         onClick={() => handleAutoFillSection(section.id, section.name)}
                         disabled={loadingAction === `autofill-${section.id}`}
-                        className="absolute top-1 right-1 text-zinc-600 hover:text-blue-400 p-1"
+                        className="absolute top-2 right-2 text-zinc-400 dark:text-zinc-600 hover:text-indigo-500 dark:hover:text-indigo-400 p-1 transition-colors"
                         title="Auto-fill details"
                     >
                       {loadingAction === `autofill-${section.id}` ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
@@ -435,14 +491,15 @@ export const SidebarSettings: React.FC<SidebarSettingsProps> = ({ config, onChan
           <div className="h-12"></div> {/* Spacer */}
         </div>
 
-        <div className="p-5 border-t border-zinc-800 bg-zinc-900 sticky bottom-0 z-10">
+        {/* Footer Action */}
+        <div className="p-6 border-t border-zinc-200 dark:border-white/5 bg-white/80 dark:bg-[#0c0c0e]/95 backdrop-blur sticky bottom-0 z-10 transition-colors duration-300">
           <button
             onClick={onGenerate}
             disabled={isGenerating || !config.name}
-            className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed text-white py-3 rounded-xl font-bold shadow-lg shadow-blue-900/20 transition-all active:scale-95"
+            className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 disabled:opacity-50 disabled:cursor-not-allowed text-white py-3.5 rounded-xl font-bold shadow-xl shadow-indigo-900/20 hover:shadow-indigo-900/40 transition-all active:scale-[0.98] tracking-wide"
           >
             {isGenerating ? <Loader2 className="animate-spin" /> : <ImageIcon size={18} />}
-            {isGenerating ? 'Generating...' : 'Generate Assets'}
+            {isGenerating ? 'GENERATING ASSETS...' : 'GENERATE ASSETS'}
           </button>
         </div>
       </aside>

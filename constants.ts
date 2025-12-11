@@ -25,7 +25,8 @@ export const ASPECT_RATIOS = [
   { label: "4:3 (Standard)", value: "4:3" },
   { label: "1:1 (Square)", value: "1:1" },
   { label: "3:4 (Portrait)", value: "3:4" },
-  { label: "9:16 (Story)", value: "9:16" }
+  { label: "9:16 (Story)", value: "9:16" },
+  { label: "Custom (Px)", value: "Custom" }
 ];
 
 export const DEFAULT_SECTIONS = [

@@ -39,6 +39,16 @@ export const generateImageForSection = async (
   
   const prompt = constructPrompt(project, section.name, section.description || "");
 
+  // Determine Aspect Ratio
+  let targetAspectRatio = project.aspectRatio;
+  if (project.aspectRatio === 'Custom' && project.width && project.height) {
+    // Gemini supports simple ratios like "width:height" string
+    targetAspectRatio = `${project.width}:${project.height}`;
+  } else if (project.aspectRatio === 'Custom') {
+    // Fallback if width/height missing
+    targetAspectRatio = '16:9';
+  }
+
   try {
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash-image',
@@ -49,7 +59,7 @@ export const generateImageForSection = async (
       },
       config: {
         imageConfig: {
-          aspectRatio: project.aspectRatio,
+          aspectRatio: targetAspectRatio,
         }
       },
     });
@@ -141,6 +151,15 @@ export const regenerateImage = async (
   project: ProjectConfig,
   originalImage: GeneratedImage
 ): Promise<GeneratedImage> => {
+  
+  // Recalculate aspect ratio based on current config (or store it in image, but using current config allows resizing)
+  let targetAspectRatio = project.aspectRatio;
+  if (project.aspectRatio === 'Custom' && project.width && project.height) {
+    targetAspectRatio = `${project.width}:${project.height}`;
+  } else if (project.aspectRatio === 'Custom') {
+    targetAspectRatio = '16:9';
+  }
+
   try {
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash-image',
@@ -151,7 +170,7 @@ export const regenerateImage = async (
       },
       config: {
         imageConfig: {
-          aspectRatio: project.aspectRatio,
+          aspectRatio: targetAspectRatio,
         }
       },
     });

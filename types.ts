@@ -27,6 +27,8 @@ export interface ProjectConfig {
   style: string;
   stylePrompt?: string; // Extracted from reference or manually edited
   aspectRatio: string;
+  width?: number; // Custom width in px
+  height?: number; // Custom height in px
   sections: SectionConfig[];
 }
 
